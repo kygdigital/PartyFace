@@ -20,7 +20,7 @@ PartyFace is an active MVP prototype.
 - Generation styles include `Cinematic Blend` and `Cutout Heads`.
 - Story templates, beat-by-beat motion planning, music direction, and final-video progress UI are implemented.
 - A local 90s stock-loop MP3 preview asset is included.
-- BMAD planning and story artifacts are included for product/UX/architecture traceability.
+- BMAD planning and story artifacts are local workflow files and are ignored by git.
 - Epic 9 final-video assembly is in progress; story 9.5 remains the next demo checkpoint.
 
 ## Quick Start
@@ -135,7 +135,6 @@ share the track.
 - `src/lib/comfy` - server-side Comfy Cloud integration boundary.
 - `src/styles` - design tokens.
 - `public/audio` - local audio preview assets.
-- `_bmad-output` - BMAD planning and implementation artifacts.
 - `tools/byolomad` - project-local BYOLOMAD runner.
 
 The original dependency-free canvas prototype is preserved in `legacy-static/`
@@ -151,21 +150,17 @@ mock/real modes without changing the client UI.
 
 ## BMAD
 
-BMAD Method is installed for Codex in this repo.
+BMAD Method can be installed locally for Codex in this repo. BMAD-generated
+files are intentionally ignored so local agent configuration, planning drafts,
+and story artifacts do not clutter the shared repository.
 
-- Skills live in `.agents/skills`.
-- BMAD config lives in `_bmad`.
-- Planning output goes to `_bmad-output/planning-artifacts`.
-- Implementation output goes to `_bmad-output/implementation-artifacts`.
+- Local skills live in `.agents/skills`.
+- Local BMAD config lives in `_bmad`.
+- Local planning output goes to `_bmad-output/planning-artifacts`.
+- Local implementation output goes to `_bmad-output/implementation-artifacts`.
 
-Key planning artifacts:
-
-- `_bmad-output/planning-artifacts/prds/prd-PartyFace-2026-05-31/prd.md`
-- `_bmad-output/planning-artifacts/prds/prd-PartyFace-2026-05-31/competitive-teardown-jibjab.md`
-- `_bmad-output/planning-artifacts/ux-designs/ux-PartyFace-2026-05-31/EXPERIENCE.md`
-- `_bmad-output/planning-artifacts/ux-designs/ux-PartyFace-2026-05-31/DESIGN.md`
-- `_bmad-output/planning-artifacts/architecture.md`
-- `_bmad-output/implementation-artifacts/sprint-status.yaml`
+These paths are available in a local BMAD-prepped workspace, but they are not
+expected to exist after a fresh clone until BMAD is installed or restored.
 
 ## BYOLOMAD
 
@@ -186,8 +181,8 @@ Claude Code skill symlink:
 ~/.claude/skills/byolomad -> tools/byolomad/skills/byolomad
 ```
 
-PartyFace also includes the top-level planning PRD symlink expected by
-BYOLOMAD:
+In a local BMAD-prepped workspace, PartyFace may include the top-level planning
+PRD symlink expected by BYOLOMAD:
 
 ```text
 _bmad-output/planning-artifacts/prd.md

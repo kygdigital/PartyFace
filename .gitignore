@@ -28,8 +28,10 @@
 # generated media sources
 /public/audio/*.wav
 
-# personal BMAD installer state
-/_bmad/config.user.toml
+# local agent/workflow artifacts
+/.agents/
+/_bmad/
+/_bmad-output/
 
 # debug
 npm-debug.log*
