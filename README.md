@@ -18,10 +18,11 @@ PartyFace is an active MVP prototype.
 - Still generation supports mock mode and Comfy Cloud mode.
 - Motion generation supports mock mode and Comfy Cloud mode.
 - Generation styles include `Cinematic Blend` and `Cutout Heads`.
-- Story templates, beat-by-beat motion planning, music direction, and final-video progress UI are implemented.
+- Story templates, beat-by-beat motion planning, music direction, and final-video checkpoint UI are implemented.
+- Template-specific birthday song scripts, editable lyrics, stock-loop preview, and prompt-ready music handoff are implemented.
 - A local 90s stock-loop MP3 preview asset is included.
 - BMAD planning and story artifacts are local workflow files and are ignored by git.
-- Epic 9 final-video assembly is in progress; story 9.5 remains the next demo checkpoint.
+- Final server-side stitching and imported/generated music rendering remain future production steps.
 
 ## Quick Start
 
@@ -103,7 +104,8 @@ The current first-use flow is:
 6. Favorite/export still outputs.
 7. Generate motion from a favorite still.
 8. Choose a story template for a longer music-video style card.
-9. Preview beat progress and final-video assembly status.
+9. Edit a short birthday song script and copy a generated-music handoff.
+10. Preview beat progress and final-video checkpoint status.
 
 ## Generation Styles
 
