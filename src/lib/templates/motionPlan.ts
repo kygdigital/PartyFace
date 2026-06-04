@@ -35,7 +35,7 @@ const DEFAULT_TARGET_DURATION_SECONDS = 30;
 export function buildMotionGenerationPlan(
   setup: PartyFaceSetupPayload,
 ): MotionGenerationPlan {
-  const audioStrategy = buildAudioStrategy(setup.storyTemplate);
+  const audioStrategy = buildAudioStrategy(setup.storyTemplate, setup.songScript);
   const clips = setup.storyTemplate.beats.map((beat, index) => {
     const durationSeconds =
       parseTimeRangeDuration(beat.timeRange) ??
@@ -72,7 +72,9 @@ export function buildMotionGenerationPlan(
     musicMood: setup.storyTemplate.musicMood,
     audioStrategy,
     summary: `${setup.storyTemplate.name}: ${setup.storyTemplate.generationGuidance}`,
-    outputSummary: `${setup.storyTemplate.name} birthday video`,
+    outputSummary: setup.songScript
+      ? `${setup.storyTemplate.name} birthday video with ${setup.songScript.title}`
+      : `${setup.storyTemplate.name} birthday video`,
     clips,
   };
 }

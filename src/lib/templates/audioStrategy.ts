@@ -1,4 +1,5 @@
 import type { StoryTemplatePayload } from "./storyTemplates";
+import type { PartyFaceSongScriptInput } from "@/lib/domain/project";
 
 export type AudioStrategyMode = "stock-loop" | "generated-music" | "provider-native-audio";
 
@@ -10,6 +11,9 @@ export type AudioStrategy = {
   bpmRange: string;
   previewUrl: string;
   structure: string;
+  songTitle?: string;
+  stockLoopFitNotes?: string;
+  handoffPrompt?: string;
   implementationNote: string;
 };
 
@@ -21,6 +25,7 @@ export const audioStrategyModes: Record<AudioStrategyMode, string> = {
 
 export function buildAudioStrategy(
   storyTemplate: StoryTemplatePayload,
+  songScript?: PartyFaceSongScriptInput,
 ): AudioStrategy {
   return {
     mode: "stock-loop",
@@ -31,6 +36,9 @@ export function buildAudioStrategy(
     previewUrl: selectPreviewUrl(storyTemplate.musicMood),
     structure:
       "Use a 30-second edit with an intro, two middle phrase changes, and a final chorus/drop aligned to the last story beat.",
+    songTitle: songScript?.title,
+    stockLoopFitNotes: songScript?.stockLoopFitNotes,
+    handoffPrompt: songScript?.handoffPrompt,
     implementationNote:
       "MVP should start by pairing generated video with curated stock loops. Generated music and provider-native audio remain future options once licensing, consistency, and render stitching are validated.",
   };
@@ -42,8 +50,12 @@ export function summarizeAudioStrategy(strategy: AudioStrategy) {
     `Mood: ${strategy.musicMood}.`,
     `Loop target: ${strategy.loopHint}.`,
     `Tempo: ${strategy.bpmRange}.`,
+    strategy.songTitle ? `Song script: ${strategy.songTitle}.` : null,
+    strategy.stockLoopFitNotes ? `Stock loop fit: ${strategy.stockLoopFitNotes}.` : null,
     strategy.structure,
-  ].join(" ");
+  ]
+    .filter(Boolean)
+    .join(" ");
 }
 
 function selectLoopHint(musicMood: string) {

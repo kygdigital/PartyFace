@@ -1,22 +1,31 @@
-import type { GenerationClipStatus, GenerationJobRecord } from "@/lib/domain/generation";
+import type {
+  GenerationClipStatus,
+  GenerationJobRecord,
+  MotionOutputVariant,
+} from "@/lib/domain/generation";
 
 type FinalVideoProgressProps = {
   job: GenerationJobRecord | null;
+  outputs: MotionOutputVariant[];
   isReadyToGenerate: boolean;
   isActive: boolean;
   error: string | null;
   onGenerateFinalVideo: () => void;
+  onExportFinalVideo: () => void;
 };
 
 export function FinalVideoProgress({
   job,
+  outputs,
   isReadyToGenerate,
   isActive,
   error,
   onGenerateFinalVideo,
+  onExportFinalVideo,
 }: FinalVideoProgressProps) {
   const clipStatuses = job?.clipStatuses ?? [];
   const completeCount = clipStatuses.filter((clip) => clip.status === "complete").length;
+  const isComplete = job?.status === "complete";
 
   return (
     <section className="rounded-lg border border-[var(--pf-line)] bg-[var(--pf-surface-raised)] p-5">
@@ -26,17 +35,28 @@ export function FinalVideoProgress({
             Final Video Progress
           </p>
           <h3 className="mt-2 text-xl font-black text-[var(--pf-ink)]">
-            Beat clip generation
+            30-second video checkpoint
           </h3>
         </div>
-        <button
-          type="button"
-          disabled={!isReadyToGenerate || isActive}
-          onClick={onGenerateFinalVideo}
-          className="min-h-10 rounded-lg bg-[var(--pf-surface-night)] px-4 text-sm font-black text-white disabled:cursor-not-allowed disabled:bg-[var(--pf-surface)] disabled:text-[var(--pf-muted)]"
-        >
-          {job ? "Regenerate beat clips" : "Generate beat clips"}
-        </button>
+        <div className="flex flex-wrap gap-2">
+          {isComplete ? (
+            <button
+              type="button"
+              onClick={onExportFinalVideo}
+              className="min-h-10 rounded-lg bg-[var(--pf-electric-blue)] px-4 text-sm font-black text-[var(--pf-ink)]"
+            >
+              Export demo
+            </button>
+          ) : null}
+          <button
+            type="button"
+            disabled={!isReadyToGenerate || isActive}
+            onClick={onGenerateFinalVideo}
+            className="min-h-10 rounded-lg bg-[var(--pf-surface-night)] px-4 text-sm font-black text-white disabled:cursor-not-allowed disabled:bg-[var(--pf-surface)] disabled:text-[var(--pf-muted)]"
+          >
+            {job ? "Regenerate beat clips" : "Generate beat clips"}
+          </button>
+        </div>
       </div>
 
       <div className="mt-4 flex flex-wrap items-center gap-2 text-sm font-bold text-[var(--pf-muted)]">
@@ -68,6 +88,59 @@ export function FinalVideoProgress({
           story beat.
         </p>
       )}
+
+      {isComplete ? (
+        <div className="mt-4 rounded-lg border border-[rgb(36_188_129_/_0.24)] bg-[rgb(36_188_129_/_0.08)] p-4">
+          <p className="text-sm font-black text-[rgb(22_135_92)]">
+            Demo checkpoint ready
+          </p>
+          <p className="mt-2 text-sm font-medium leading-6 text-[var(--pf-muted)]">
+            PartyFace has generated the storyboard clips and can export the current
+            final-video demo artifact. In mock mode this exports a reviewable demo
+            card; in Comfy mode this exports the first completed clip while full
+            server-side stitching remains the next production renderer step.
+          </p>
+        </div>
+      ) : null}
+
+      {outputs.length > 0 ? (
+        <div className="mt-4 grid gap-3 md:grid-cols-2">
+          {outputs.map((output) => (
+            <article
+              key={output.variantId}
+              className="overflow-hidden rounded-lg border border-[var(--pf-line)] bg-white"
+            >
+              <div className="grid aspect-video bg-[var(--pf-surface-night)]">
+                {output.videoUrl ? (
+                  <video
+                    src={output.videoUrl}
+                    className="h-full w-full object-cover"
+                    controls
+                    muted
+                    playsInline
+                    preload="metadata"
+                  />
+                ) : (
+                  <div className="grid content-center p-4 text-center text-white">
+                    <p className="font-serif text-3xl font-black">{output.title}</p>
+                    <p className="mt-2 text-sm font-bold text-white/72">
+                      {output.durationSeconds}s demo export
+                    </p>
+                  </div>
+                )}
+              </div>
+              <div className="p-4">
+                <p className="text-sm font-black text-[var(--pf-ink)]">
+                  {output.title}
+                </p>
+                <p className="mt-1 text-xs font-bold text-[var(--pf-muted)]">
+                  {output.subtitle}
+                </p>
+              </div>
+            </article>
+          ))}
+        </div>
+      ) : null}
     </section>
   );
 }

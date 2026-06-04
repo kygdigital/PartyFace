@@ -58,10 +58,22 @@ export const partyFaceStoryTemplateInputSchema = z.object({
   beats: z.array(partyFaceStoryBeatInputSchema).min(1).max(6),
 });
 
+export const partyFaceSongScriptInputSchema = z.object({
+  templateId: z.string().min(1),
+  title: z.string().min(1),
+  styleNotes: z.string().min(1),
+  tempoMood: z.string().min(1),
+  stockLoopFitNotes: z.string().min(1),
+  desiredDurationSeconds: z.number().positive(),
+  lyrics: z.string().min(1),
+  handoffPrompt: z.string().min(1),
+});
+
 export const partyFaceSetupPayloadSchema = z.object({
   template: partyFaceTemplateInputSchema,
   generationStyle: partyFaceGenerationStyleInputSchema,
   storyTemplate: partyFaceStoryTemplateInputSchema,
+  songScript: partyFaceSongScriptInputSchema.optional(),
   birthdayDetails: birthdayDetailsSchema,
   prompt: z.string().min(1),
   subjects: z.array(partyFaceSubjectInputSchema).min(1).max(2),

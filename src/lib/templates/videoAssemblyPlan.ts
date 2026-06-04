@@ -55,7 +55,17 @@ export function buildVideoAssemblyPlan(
         id: "attach-audio",
         title: "Attach music loop",
         status: "future",
-        detail: `${motionPlan.audioStrategy.label}: ${motionPlan.audioStrategy.loopHint}.`,
+        detail: [
+          `${motionPlan.audioStrategy.label}: ${motionPlan.audioStrategy.loopHint}.`,
+          motionPlan.audioStrategy.songTitle
+            ? `Song script: ${motionPlan.audioStrategy.songTitle}.`
+            : null,
+          motionPlan.audioStrategy.stockLoopFitNotes
+            ? `Fit notes: ${motionPlan.audioStrategy.stockLoopFitNotes}.`
+            : null,
+        ]
+          .filter(Boolean)
+          .join(" "),
       },
       {
         id: "final-export",

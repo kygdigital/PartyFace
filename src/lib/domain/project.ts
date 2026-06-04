@@ -50,10 +50,22 @@ export type PartyFaceStoryTemplateInput = {
   beats: PartyFaceStoryBeatInput[];
 };
 
+export type PartyFaceSongScriptInput = {
+  templateId: string;
+  title: string;
+  styleNotes: string;
+  tempoMood: string;
+  stockLoopFitNotes: string;
+  desiredDurationSeconds: number;
+  lyrics: string;
+  handoffPrompt: string;
+};
+
 export type PartyFaceSetupPayload = {
   template: PartyFaceTemplateInput;
   generationStyle: PartyFaceGenerationStyleInput;
   storyTemplate: PartyFaceStoryTemplateInput;
+  songScript?: PartyFaceSongScriptInput;
   birthdayDetails: BirthdayDetails;
   prompt: string;
   subjects: PartyFaceSubjectInput[];

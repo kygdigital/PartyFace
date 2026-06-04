@@ -1,4 +1,8 @@
-import type { BirthdayDetails, PartyFaceSetupPayload } from "@/lib/domain/project";
+import type {
+  BirthdayDetails,
+  PartyFaceSetupPayload,
+  PartyFaceSongScriptInput,
+} from "@/lib/domain/project";
 import type { GenerationStyle } from "@/lib/templates/generationStyles";
 import type { StoryTemplatePayload } from "@/lib/templates/storyTemplates";
 import type { StarterTemplate } from "@/lib/templates/starterTemplates";
@@ -8,6 +12,7 @@ type BuildPartyFaceSetupPayloadInput = {
   template: StarterTemplate;
   generationStyle: GenerationStyle;
   storyTemplate: StoryTemplatePayload;
+  songScript?: PartyFaceSongScriptInput;
   birthdayDetails: BirthdayDetails;
   prompt: string;
   personSlots: PersonSlot[];
@@ -17,6 +22,7 @@ export function buildPartyFaceSetupPayload({
   template,
   generationStyle,
   storyTemplate,
+  songScript,
   birthdayDetails,
   prompt,
   personSlots,
@@ -33,6 +39,7 @@ export function buildPartyFaceSetupPayload({
       promptInstruction: generationStyle.promptInstruction,
     },
     storyTemplate,
+    songScript,
     birthdayDetails,
     prompt,
     subjects: personSlots

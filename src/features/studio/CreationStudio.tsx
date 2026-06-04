@@ -19,10 +19,17 @@ import {
   storyTemplates,
 } from "@/lib/templates/storyTemplates";
 import { buildMotionGenerationPlan } from "@/lib/templates/motionPlan";
+import {
+  buildSongScriptPayload,
+  findTemplateSongScript,
+  formatSongScript,
+  personalizeSongScript,
+} from "@/lib/templates/songScripts";
 import { buildVideoAssemblyPlan } from "@/lib/templates/videoAssemblyPlan";
 import { BirthdayPromptComposer } from "./components/BirthdayPromptComposer";
 import { BenchmarkComparison } from "./components/BenchmarkComparison";
 import { GenerationStyleSelector } from "./components/GenerationStyleSelector";
+import { SongScriptComposer } from "./components/SongScriptComposer";
 import { StoryTemplatePlanner } from "./components/StoryTemplatePlanner";
 import { StarterTemplatePicker } from "./components/StarterTemplatePicker";
 import { PersonSlots } from "./components/PersonSlots";
@@ -80,6 +87,9 @@ export function CreationStudio() {
   const [birthdayDetails, setBirthdayDetails] = useState(emptyBirthdayDetails);
   const [customPromptText, setCustomPromptText] = useState("");
   const [isPromptCustomized, setIsPromptCustomized] = useState(false);
+  const [customSongScriptText, setCustomSongScriptText] = useState("");
+  const [isSongScriptCustomized, setIsSongScriptCustomized] = useState(false);
+  const [isSongHandoffCopied, setIsSongHandoffCopied] = useState(false);
   const [stillJobId, setStillJobId] = useState<string | null>(null);
   const [stillJobStatus, setStillJobStatus] = useState<GenerationJobStatus>("idle");
   const [stillGenerationError, setStillGenerationError] = useState<string | null>(null);
@@ -123,12 +133,37 @@ export function CreationStudio() {
     [birthdayDetails, selectedTemplate],
   );
   const promptText = isPromptCustomized ? customPromptText : composedPrompt;
+  const selectedSongScript = useMemo(
+    () => findTemplateSongScript(selectedTemplateId),
+    [selectedTemplateId],
+  );
+  const defaultSongScriptText = useMemo(
+    () => formatSongScript(selectedSongScript),
+    [selectedSongScript],
+  );
+  const songScriptText = isSongScriptCustomized
+    ? customSongScriptText
+    : defaultSongScriptText;
+  const personalizedSongScriptPreview = useMemo(
+    () => personalizeSongScript(songScriptText, birthdayDetails),
+    [birthdayDetails, songScriptText],
+  );
+  const songScriptPayload = useMemo(
+    () =>
+      buildSongScriptPayload(
+        selectedTemplateId,
+        birthdayDetails,
+        songScriptText,
+      ),
+    [birthdayDetails, selectedTemplateId, songScriptText],
+  );
   const setupPayload = useMemo(
     () =>
       buildPartyFaceSetupPayload({
         template: selectedTemplate,
         generationStyle: selectedGenerationStyle,
         storyTemplate: storyTemplatePayload,
+        songScript: songScriptPayload,
         birthdayDetails,
         prompt: promptText,
         personSlots,
@@ -138,6 +173,7 @@ export function CreationStudio() {
       personSlots,
       promptText,
       selectedGenerationStyle,
+      songScriptPayload,
       storyTemplatePayload,
       selectedTemplate,
     ],
@@ -174,6 +210,28 @@ export function CreationStudio() {
     ) ??
     motionVariants[0] ??
     null;
+  const finalVideoOutputs = useMemo(() => {
+    if (
+      finalVideoJobRecord?.outputType === "final-video" &&
+      hasMotionOutputs(finalVideoJobRecord.outputs)
+    ) {
+      return finalVideoJobRecord.outputs;
+    }
+
+    if (finalVideoJobRecord?.status === "complete") {
+      return [
+        createMockFinalVideoVariant(
+          finalVideoJobRecord.jobId,
+          setupPayload.birthdayDetails.recipientName,
+          finalVideoJobRecord.promptSnapshot,
+          finalVideoJobRecord.motionPlanSnapshot?.targetDurationSeconds ?? 30,
+        ),
+      ];
+    }
+
+    return [];
+  }, [finalVideoJobRecord, setupPayload.birthdayDetails.recipientName]);
+  const selectedFinalVideoVariant = finalVideoOutputs[0] ?? null;
   const stillFavorite =
     stillVariants.find((variant) =>
       favoriteStillVariantIds.includes(variant.variantId),
@@ -411,6 +469,9 @@ export function CreationStudio() {
     setSelectedTemplateId(templateId);
     setCustomPromptText("");
     setIsPromptCustomized(false);
+    setCustomSongScriptText("");
+    setIsSongScriptCustomized(false);
+    setIsSongHandoffCopied(false);
   }
 
   function handleSelectStoryTemplate(templateId: string) {
@@ -433,6 +494,23 @@ export function CreationStudio() {
   function handleResetPrompt() {
     setCustomPromptText("");
     setIsPromptCustomized(false);
+  }
+
+  function handleChangeSongScript(nextScript: string) {
+    setCustomSongScriptText(nextScript);
+    setIsSongScriptCustomized(nextScript !== defaultSongScriptText);
+    setIsSongHandoffCopied(false);
+  }
+
+  function handleResetSongScript() {
+    setCustomSongScriptText("");
+    setIsSongScriptCustomized(false);
+    setIsSongHandoffCopied(false);
+  }
+
+  async function handleCopySongHandoff() {
+    await navigator.clipboard.writeText(songScriptPayload.handoffPrompt);
+    setIsSongHandoffCopied(true);
   }
 
   async function handleStillGenerate() {
@@ -605,6 +683,18 @@ export function CreationStudio() {
               onChangePrompt={handleChangePrompt}
               onResetPrompt={handleResetPrompt}
             />
+
+            <SongScriptComposer
+              songScript={selectedSongScript}
+              scriptText={songScriptText}
+              personalizedPreview={personalizedSongScriptPreview}
+              handoffPrompt={songScriptPayload.handoffPrompt}
+              isCustomized={isSongScriptCustomized}
+              copied={isSongHandoffCopied}
+              onChangeScript={handleChangeSongScript}
+              onResetScript={handleResetSongScript}
+              onCopyHandoff={handleCopySongHandoff}
+            />
           </div>
         </aside>
 
@@ -770,10 +860,12 @@ export function CreationStudio() {
 
           <FinalVideoProgress
             job={finalVideoJobRecord}
+            outputs={finalVideoOutputs}
             isReadyToGenerate={isReadyToGenerate}
             isActive={isFinalVideoJobActive}
             error={finalVideoGenerationError}
             onGenerateFinalVideo={handleFinalVideoGenerate}
+            onExportFinalVideo={() => exportMotionVariant(selectedFinalVideoVariant)}
           />
 
           <MotionPreview
@@ -845,4 +937,25 @@ function hasMotionOutputs(
   outputs: GenerationJobRecord["outputs"],
 ): outputs is MotionOutputVariant[] {
   return Boolean(outputs?.every((output) => "previewKind" in output));
+}
+
+function createMockFinalVideoVariant(
+  jobId: string,
+  recipientName?: string,
+  promptSnapshot?: string,
+  durationSeconds = 30,
+): MotionOutputVariant {
+  const name = recipientName?.trim() || "the birthday star";
+
+  return {
+    variantId: `${jobId}-demo-final-video`,
+    jobId,
+    title: `Final Video Demo for ${name}`,
+    subtitle: "30-second storyboard checkpoint with music direction",
+    promptSnapshot:
+      promptSnapshot ??
+      "Storyboard clips are complete and ready for final video review.",
+    durationSeconds,
+    previewKind: "mock-css",
+  };
 }
