@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PartyFace</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <aside class="panel">
+        <div class="brand">
+          <div class="mark">PF</div>
+          <div>
+            <h1>PartyFace</h1>
+            <p>Birthday card studio</p>
+          </div>
+        </div>
+
+        <section class="control-section">
+          <h2>Card</h2>
+          <label class="field">
+            <span>Headline</span>
+            <input id="headlineInput" value="Happy Birthday!" maxlength="34" />
+          </label>
+          <label class="field">
+            <span>Message</span>
+            <textarea id="messageInput" maxlength="96">Tonight, everyone is the life of the party.</textarea>
+          </label>
+          <div class="template-grid" id="templateGrid" aria-label="Card templates"></div>
+        </section>
+
+        <section class="control-section">
+          <h2>Faces</h2>
+          <label class="upload-target">
+            <input id="faceUpload" type="file" accept="image/*" multiple />
+            <span class="upload-icon">+</span>
+            <span>Add face photos</span>
+          </label>
+          <div id="faceList" class="face-list"></div>
+        </section>
+
+        <section class="control-section">
+          <h2>Selected Face</h2>
+          <div class="range-row">
+            <label for="scaleInput">Scale</label>
+            <input id="scaleInput" type="range" min="0.6" max="1.9" step="0.01" value="1" />
+          </div>
+          <div class="range-row">
+            <label for="rotateInput">Rotate</label>
+            <input id="rotateInput" type="range" min="-24" max="24" step="1" value="0" />
+          </div>
+          <div class="button-row">
+            <button id="prevSlotButton" type="button">Prev</button>
+            <button id="nextSlotButton" type="button">Next</button>
+          </div>
+        </section>
+
+        <section class="control-section">
+          <h2>Comfy Draft</h2>
+          <label class="field">
+            <span>Style prompt</span>
+            <textarea id="promptInput" maxlength="240">playful cinematic birthday card, real face cutouts, confetti, warm party lighting, charming handmade collage</textarea>
+          </label>
+          <button id="copyPromptButton" class="secondary" type="button">Copy prompt</button>
+        </section>
+
+        <button id="downloadButton" class="primary" type="button">Download PNG</button>
+      </aside>
+
+      <section class="stage-wrap">
+        <div class="topbar">
+          <div>
+            <strong id="templateName">Cake Parade</strong>
+            <span id="slotHint">Drag a face on the card to reposition it.</span>
+          </div>
+          <button id="resetButton" type="button">Reset layout</button>
+        </div>
+        <div class="canvas-frame">
+          <canvas id="cardCanvas" width="1200" height="1600" aria-label="Birthday card canvas"></canvas>
+        </div>
+      </section>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
+</html>

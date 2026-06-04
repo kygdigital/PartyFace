@@ -1,0 +1,15 @@
+:root {
+  --pf-ink: #211820;
+  --pf-surface: #fff7fb;
+  --pf-surface-raised: #ffffff;
+  --pf-surface-night: #1a1028;
+  --pf-line: #e9d7e6;
+  --pf-muted: #766879;
+  --pf-neon-pink: #ff3da7;
+  --pf-disco-gold: #ffc857;
+  --pf-violet: #7c3aed;
+  --pf-electric-blue: #2dd4ff;
+  --pf-success: #16a34a;
+  --pf-warning: #f59e0b;
+  --pf-danger: #e11d48;
+}
