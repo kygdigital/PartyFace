@@ -14,9 +14,9 @@ fixed template. Personalization comes from:
 - Choreography presets, optionally.
 - Theme packs, music selection, and later gag copy.
 
-The MVP should feel curated rather than generative-chaotic. A user picks a
-theme, adds faces, chooses a library track, and PartyFace renders a predictable,
-funny, shareable card.
+The MVP should feel curated rather than generative-chaotic. A user picks from
+3-5 fixed template/theme options, adds one or two real faces, chooses a library
+track, and PartyFace renders a predictable, funny, shareable card.
 
 ## Discovery Files
 
@@ -29,6 +29,7 @@ funny, shareable card.
 | `docs/music-library-index.json` | Current PartyFace seed index for reusable generated songs. | Assets -> compose |
 | `docs/epic-11-music-choreography-plan.md` | Epic 11 implementation plan for track selection, beat grids, and cutout-head choreography. | Product/engineering |
 | `docs/product-reconciliation.md` | Reconciles the original prompt/generation-first prototype with the fixed-template renderer direction. | Product/engineering |
+| `docs/product-requirements-v2.md` | Updated PRD for the fixed-template, music-backed, 30-45 second MP4 MVP. | Product |
 
 ## Two Schemas, Two Layers
 
@@ -107,11 +108,11 @@ can expose per-beat overrides with:
 
 ## MVP Scope
 
-- One theme pack.
-- One or two face uploads.
+- 3-5 fixed template/theme options for testing.
+- One or two real face uploads.
 - Library track picker.
 - Fixed template renderer.
-- Downloadable MP4.
+- Downloadable 30-45 second MP4.
 
 Deferred:
 

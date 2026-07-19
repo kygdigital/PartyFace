@@ -13,7 +13,8 @@ with the newer discovery documents:
 
 The short version: PartyFace is moving from a prompt-first generative studio
 toward a fixed-template e-card renderer where Comfy Cloud creates upstream
-ingredients and the web app assembles a predictable, funny MP4.
+ingredients and the web app assembles predictable, funny MP4 cards across 3-5
+curated template/theme options.
 
 ## Current Product Threads
 
@@ -39,13 +40,14 @@ ingredients and the web app assembles a predictable, funny MP4.
 ## Recommended Product Resolution
 
 PartyFace should keep the current Creation Studio as a useful prototype surface,
-but the next MVP should narrow around one fixed, renderer-first card:
+but the next MVP should narrow around fixed, renderer-first cards. The first
+reference card is:
 
 **Birthday Royale / Red Carpet Glam**
 
 The MVP flow becomes:
 
-1. Choose Red Carpet Glam.
+1. Choose one of 3-5 curated template/theme options, starting with Red Carpet Glam.
 2. Upload one or two faces.
 3. Confirm recipient name and optional age.
 4. Choose a registered Birthday Royale song.
@@ -59,13 +61,13 @@ production and test tooling rather than being the end-user's primary render path
 
 | Topic | Original Product | New Discovery Docs | Conflict | Recommended Resolution |
 | ----- | ---------------- | ------------------ | -------- | ---------------------- |
-| Template model | 3-5 Starter Templates, customizable prompt recipes | One fixed template plus swappable theme packs | Breadth vs curated consistency | For MVP, ship one fixed template/theme. Keep Starter Templates as exploration/prototype UI until renderer path replaces them. |
+| Template model | 3-5 Starter Templates, customizable prompt recipes | Fixed templates plus swappable theme packs | Breadth vs curated consistency | Keep 3-5 curated templates for diversity and testing, but make each one fixed and renderer-ready rather than prompt-open. |
 | Rendering path | Generate stills/motion directly through Comfy during creation | Render from registered assets with ffmpeg/canvas/WebCodecs; no Comfy at render time | Comfy is runtime backend vs upstream factory | Make Comfy upstream for assets. Runtime renderer should not require Comfy for fixed-template cards. |
 | User customization | Prompt editing and birthday details drive output | Faces always vary; choreo presets optional; gag text deferred | Flexible prompting vs locked experience | Lock core experience for MVP. Allow face/name/age/music. Defer prompt editing for renderer cards. |
 | Output type | Still output and short motion output are first-class | Finished MP4 e-card assembled from beat template | Image/video generation studio vs e-card renderer | Keep still generation as useful asset/prototype capability, but MVP success should be downloadable MP4. |
-| Duration | Current app plans 30-second music-video cards | Template example is 72 seconds | Short shareable test vs full card structure | Decide intentionally. Recommend 30-45s for MVP unless the Birthday Royale song/beat skeleton truly needs 72s. |
+| Duration | Current app plans 30-second music-video cards | Template example is 72 seconds | Short shareable test vs full card structure | Use 30-45 seconds for MVP. Treat 72 seconds as a future fuller-card target. |
 | Beat count | Story templates use 4 beats | Discovery says fixed 8-beat structure, then lists 9 including outro | 4-beat prototype vs fixed card skeleton; 8 vs 9 ambiguity | Adopt template.schema as source of truth. Treat outro as beat 9 or assembly tail; update wording once chosen. |
-| Cast size | Person 2 optional | Theme pack requires lead and sidekick | Optional second person vs required sidekick | For Red Carpet Glam, require two faces or provide a stock sidekick fallback. Recommend stock sidekick fallback for easier MVP testing. |
+| Cast size | Person 2 optional | Theme pack requires lead and sidekick | Optional second person vs required sidekick | Support real uploaded people only. Templates should provide one-person and two-person choreography formats. |
 | Music | Song scripts + stock loop preview; possible Suno import | Reusable songs generated externally with ACE-Step and registered in library | Generated lyrics/handoff vs registered final tracks | Song scripts become upstream prompts/creative notes. Runtime uses `music_ref` tracks. |
 | Choreography | Story/motion prompts describe movement | Fixed choreography enum per beat | AI-generated movement vs canned dance vocabulary | Use the choreo enum for renderer MVP. Reserve AI video generation for producing/refreshing raw animation assets. |
 | Face handling | Uploaded faces sent into image/video generation | Face cutouts composited onto figures | Integrated generation vs explicit cutout compositing | Favor explicit cutout compositing for JibJab-style control. Use Nano Banana Pro/upstream model for alpha/cutout quality. |
@@ -82,7 +84,7 @@ complexity. Canvas/WebCodecs can come later for richer client previews.
 
 ### D2: MVP Duration
 
-**Recommendation:** 30-45 seconds first.
+**Decision:** 30-45 seconds first.
 
 Reasoning: Faster rendering and easier review. The current `template.schema.json`
 example uses 72 seconds; that may be a fuller template target, but the prototype
@@ -90,29 +92,31 @@ has already validated shorter clips.
 
 ### D3: Cast Requirement
 
-**Recommendation:** Support one required face plus optional second face with a
-stock sidekick fallback.
+**Decision:** Support one uploaded real person or two uploaded real people.
+Do not use stock sidekick people for the core MVP.
 
-Reasoning: The old PRD's second slot was optional. Requiring two faces increases
-friction. The Red Carpet Glam theme can still prefer two faces.
+Reasoning: The product promise is personalization with real friends. Template
+choreography should adapt to one-person and two-person formats rather than
+filling missing cast slots with stock people.
 
 ### D4: Number Of Templates
 
-**Recommendation:** One production template, multiple prototype prompts.
+**Decision:** 3-5 curated production-test templates.
 
-Reasoning: The current 3-5 Starter Templates helped discovery, but renderer work
-needs depth. One excellent card is more valuable than five shallow renderers.
+Reasoning: Diversity is important for testing taste, quality, and next-step
+decisions. Each template should still be fixed enough to produce reliable
+renderer output.
 
 ### D5: Comfy Cloud Role
 
-**Recommendation:** Upstream asset factory for the fixed-template MVP.
+**Decision:** Upstream asset factory for the fixed-template MVP.
 
 Reasoning: This clarifies architecture. Comfy creates songs, figures, cutouts,
 and maybe animation assets. The web app composes registered assets into MP4.
 
 ### D6: Song Scripts
 
-**Recommendation:** Keep song scripts as creative prompts and admin/reference
+**Decision:** Keep song scripts as creative prompts and admin/reference
 copy, not as runtime user-facing final lyrics for fixed renderer cards.
 
 Reasoning: A registered music library makes the runtime deterministic. Scripts
@@ -123,18 +127,19 @@ are still useful for generating new ACE-Step tracks and documenting the tone.
 PartyFace MVP should be:
 
 - Birthday-only.
-- One production theme pack: Red Carpet Glam.
-- One fixed Birthday Royale template.
-- One or two uploaded faces.
+- 3-5 fixed, curated template/theme options for testing.
+- Red Carpet Glam / Birthday Royale as the first reference template.
+- One or two uploaded real faces.
+- One-person and two-person choreography formats.
 - A reusable music library with at least two Birthday Royale tracks.
 - Beat-grid-based choreography timing.
 - Fixed choreography enum with curated per-beat defaults.
-- Renderer-produced downloadable MP4.
+- Renderer-produced downloadable 30-45 second MP4.
 
 ## Updated Non-Goals
 
 - In-app song generation.
-- Large template catalog.
+- Large template catalog beyond the first 3-5 test templates.
 - Custom gag text.
 - AI-generated dance at runtime.
 - Arbitrary prompt-to-video as the main creation path.
@@ -172,7 +177,7 @@ PartyFace MVP should be:
 ## Proposed Next Epic 11 Shape
 
 1. Load registered template/theme/music data in the app.
-2. Show Red Carpet Glam as the first production card.
+2. Show 3-5 fixed template/theme options, starting with Red Carpet Glam.
 3. Compute beat timestamps for the selected music track.
 4. Map template beats to choreography presets and overlays.
 5. Show a renderer preview plan.
@@ -181,8 +186,6 @@ PartyFace MVP should be:
 ## Open Questions
 
 1. Should `outro` be beat 9, or an assembly tail outside the "8-beat" skeleton?
-2. Should Red Carpet Glam require two uploaded faces, or allow one face plus stock sidekick?
-3. Should the first renderer be server-side ffmpeg only?
-4. Is 72 seconds intentional for Birthday Royale, or should the MVP version be 30-45 seconds?
-5. Should track files live in `public/library/`, object storage, or remain external until ingest?
-6. Should template/theme/music JSON live in `docs/` temporarily or move into `src/lib/partyface-registry/` when implemented?
+2. Should the first renderer be server-side ffmpeg only?
+3. Should track files live in `public/library/`, object storage, or remain external until ingest?
+4. Should template/theme/music JSON live in `docs/` temporarily or move into `src/lib/partyface-registry/` when implemented?
