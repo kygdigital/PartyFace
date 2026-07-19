@@ -61,11 +61,32 @@ export type PartyFaceSongScriptInput = {
   handoffPrompt: string;
 };
 
+export type PartyFaceMusicTrackInput = {
+  id: string;
+  title: string;
+  file: string;
+  source: string;
+  theme: string;
+  vibeTags: string[];
+  bpm: number;
+  key: string;
+  durationSeconds: number;
+  vocal: string;
+  beatGrid: {
+    bpm: number;
+    downbeatOffsetSeconds: number;
+    beatsPerBar: number;
+  };
+  beatMapSource: string;
+  previewUrl: string;
+};
+
 export type PartyFaceSetupPayload = {
   template: PartyFaceTemplateInput;
   generationStyle: PartyFaceGenerationStyleInput;
   storyTemplate: PartyFaceStoryTemplateInput;
   songScript?: PartyFaceSongScriptInput;
+  musicTrack: PartyFaceMusicTrackInput;
   birthdayDetails: BirthdayDetails;
   prompt: string;
   subjects: PartyFaceSubjectInput[];

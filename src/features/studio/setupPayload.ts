@@ -4,6 +4,7 @@ import type {
   PartyFaceSongScriptInput,
 } from "@/lib/domain/project";
 import type { GenerationStyle } from "@/lib/templates/generationStyles";
+import type { MusicLibraryTrack } from "@/lib/templates/musicLibrary";
 import type { StoryTemplatePayload } from "@/lib/templates/storyTemplates";
 import type { StarterTemplate } from "@/lib/templates/starterTemplates";
 import type { PersonSlot } from "./studioTypes";
@@ -13,6 +14,7 @@ type BuildPartyFaceSetupPayloadInput = {
   generationStyle: GenerationStyle;
   storyTemplate: StoryTemplatePayload;
   songScript?: PartyFaceSongScriptInput;
+  musicTrack: MusicLibraryTrack;
   birthdayDetails: BirthdayDetails;
   prompt: string;
   personSlots: PersonSlot[];
@@ -23,6 +25,7 @@ export function buildPartyFaceSetupPayload({
   generationStyle,
   storyTemplate,
   songScript,
+  musicTrack,
   birthdayDetails,
   prompt,
   personSlots,
@@ -40,6 +43,21 @@ export function buildPartyFaceSetupPayload({
     },
     storyTemplate,
     songScript,
+    musicTrack: {
+      id: musicTrack.id,
+      title: musicTrack.title,
+      file: musicTrack.file,
+      source: musicTrack.source,
+      theme: musicTrack.theme,
+      vibeTags: musicTrack.vibeTags,
+      bpm: musicTrack.bpm,
+      key: musicTrack.key,
+      durationSeconds: musicTrack.durationSeconds,
+      vocal: musicTrack.vocal,
+      beatGrid: musicTrack.beatGrid,
+      beatMapSource: musicTrack.beatMapSource,
+      previewUrl: musicTrack.previewUrl,
+    },
     birthdayDetails,
     prompt,
     subjects: personSlots

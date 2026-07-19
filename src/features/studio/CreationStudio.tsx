@@ -18,6 +18,11 @@ import {
   findStoryTemplate,
   storyTemplates,
 } from "@/lib/templates/storyTemplates";
+import {
+  defaultMusicLibraryTrack,
+  findMusicLibraryTrack,
+  musicLibraryTracks,
+} from "@/lib/templates/musicLibrary";
 import { buildMotionGenerationPlan } from "@/lib/templates/motionPlan";
 import {
   buildSongScriptPayload,
@@ -29,6 +34,7 @@ import { buildVideoAssemblyPlan } from "@/lib/templates/videoAssemblyPlan";
 import { BirthdayPromptComposer } from "./components/BirthdayPromptComposer";
 import { BenchmarkComparison } from "./components/BenchmarkComparison";
 import { GenerationStyleSelector } from "./components/GenerationStyleSelector";
+import { MusicTrackPicker } from "./components/MusicTrackPicker";
 import { SongScriptComposer } from "./components/SongScriptComposer";
 import { StoryTemplatePlanner } from "./components/StoryTemplatePlanner";
 import { StarterTemplatePicker } from "./components/StarterTemplatePicker";
@@ -82,6 +88,9 @@ export function CreationStudio() {
   const [selectedStoryTemplateId, setSelectedStoryTemplateId] = useState(
     defaultStoryTemplate.id,
   );
+  const [selectedMusicTrackId, setSelectedMusicTrackId] = useState(
+    defaultMusicLibraryTrack.id,
+  );
   const [storyBeatCaptions, setStoryBeatCaptions] = useState<Record<string, string>>({});
   const [personSlots, setPersonSlots] = useState<PersonSlot[]>(initialPersonSlots);
   const [birthdayDetails, setBirthdayDetails] = useState(emptyBirthdayDetails);
@@ -128,6 +137,10 @@ export function CreationStudio() {
     () => buildStoryTemplatePayload(selectedStoryTemplate, storyBeatCaptions),
     [selectedStoryTemplate, storyBeatCaptions],
   );
+  const selectedMusicTrack = useMemo(
+    () => findMusicLibraryTrack(selectedMusicTrackId),
+    [selectedMusicTrackId],
+  );
   const composedPrompt = useMemo(
     () => composeBirthdayPrompt(selectedTemplate, birthdayDetails),
     [birthdayDetails, selectedTemplate],
@@ -164,6 +177,7 @@ export function CreationStudio() {
         generationStyle: selectedGenerationStyle,
         storyTemplate: storyTemplatePayload,
         songScript: songScriptPayload,
+        musicTrack: selectedMusicTrack,
         birthdayDetails,
         prompt: promptText,
         personSlots,
@@ -173,6 +187,7 @@ export function CreationStudio() {
       personSlots,
       promptText,
       selectedGenerationStyle,
+      selectedMusicTrack,
       songScriptPayload,
       storyTemplatePayload,
       selectedTemplate,
@@ -674,6 +689,12 @@ export function CreationStudio() {
               onChangeBeatCaption={handleChangeBeatCaption}
             />
 
+            <MusicTrackPicker
+              tracks={musicLibraryTracks}
+              selectedTrackId={selectedMusicTrackId}
+              onSelectTrack={setSelectedMusicTrackId}
+            />
+
             <BirthdayPromptComposer
               details={birthdayDetails}
               promptText={promptText}
@@ -791,6 +812,7 @@ export function CreationStudio() {
                         </li>
                         <li>{setupPayload.generationStyle.name} style selected.</li>
                         <li>{setupPayload.storyTemplate.name} story arc selected.</li>
+                        <li>{setupPayload.musicTrack.title} music track selected.</li>
                         {stillJobId ? (
                           <li>
                             Still job {stillJobId}: {stillJobStatus}

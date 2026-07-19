@@ -15,6 +15,7 @@ export type VideoAssemblyPlan = {
   aspectRatio: "4:5";
   targetDurationSeconds: number;
   audioMode: string;
+  musicTrackTitle: string;
   clipCount: number;
   exportNameHint: string;
   steps: VideoAssemblyStep[];
@@ -29,6 +30,8 @@ export function buildVideoAssemblyPlan(
     aspectRatio: "4:5",
     targetDurationSeconds: motionPlan.targetDurationSeconds,
     audioMode: motionPlan.audioStrategy.label,
+    musicTrackTitle:
+      motionPlan.audioStrategy.trackTitle ?? motionPlan.audioStrategy.loopHint,
     clipCount: motionPlan.clips.length,
     exportNameHint: "partyface-birthday-video.mp4",
     steps: [
@@ -42,7 +45,7 @@ export function buildVideoAssemblyPlan(
         id: "normalize-clips",
         title: "Normalize timing and frame",
         status: "planned",
-        detail: `Keep clips in ${motionPlan.targetDurationSeconds}s total, 4:5 framing, browser-playable MP4-compatible video.`,
+        detail: `Keep clips in ${motionPlan.targetDurationSeconds}s total, 4:5 framing, browser-playable MP4-compatible video, with cuts aligned to ${motionPlan.audioStrategy.bpmRange}.`,
       },
       {
         id: "stitch-clips",
@@ -57,6 +60,9 @@ export function buildVideoAssemblyPlan(
         status: "future",
         detail: [
           `${motionPlan.audioStrategy.label}: ${motionPlan.audioStrategy.loopHint}.`,
+          motionPlan.audioStrategy.trackFile
+            ? `Registered file: ${motionPlan.audioStrategy.trackFile}.`
+            : null,
           motionPlan.audioStrategy.songTitle
             ? `Song script: ${motionPlan.audioStrategy.songTitle}.`
             : null,

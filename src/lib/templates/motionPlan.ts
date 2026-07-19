@@ -4,6 +4,7 @@ import {
   summarizeAudioStrategy,
   type AudioStrategy,
 } from "./audioStrategy";
+import { buildChoreographyCue, type ChoreographyCue } from "./choreography";
 
 export type MotionClipPlan = {
   clipId: string;
@@ -17,6 +18,8 @@ export type MotionClipPlan = {
   transition: string;
   cameraDirection: string;
   audioCue: string;
+  beatTimingCue: string;
+  choreography: ChoreographyCue;
 };
 
 export type MotionGenerationPlan = {
@@ -35,11 +38,26 @@ const DEFAULT_TARGET_DURATION_SECONDS = 30;
 export function buildMotionGenerationPlan(
   setup: PartyFaceSetupPayload,
 ): MotionGenerationPlan {
-  const audioStrategy = buildAudioStrategy(setup.storyTemplate, setup.songScript);
+  const audioStrategy = buildAudioStrategy(
+    setup.storyTemplate,
+    setup.songScript,
+    setup.musicTrack,
+  );
   const clips = setup.storyTemplate.beats.map((beat, index) => {
     const durationSeconds =
       parseTimeRangeDuration(beat.timeRange) ??
       Math.round(DEFAULT_TARGET_DURATION_SECONDS / setup.storyTemplate.beats.length);
+    const choreography = buildChoreographyCue({
+      templateId: setup.storyTemplate.id,
+      beat,
+      sequence: index + 1,
+      totalBeats: setup.storyTemplate.beats.length,
+      track: {
+        ...setup.musicTrack,
+        beatMap: null,
+      },
+      castCount: setup.subjects.length,
+    });
 
     return {
       clipId: `${setup.storyTemplate.id}-${beat.id}`,
@@ -49,16 +67,23 @@ export function buildMotionGenerationPlan(
       durationSeconds,
       title: beat.title,
       caption: personalizeCaption(beat.caption, setup.birthdayDetails.recipientName),
-      visualPrompt: buildClipPrompt(setup, beat.visualDirection, beat.caption),
+      visualPrompt: buildClipPrompt(
+        setup,
+        beat.visualDirection,
+        beat.caption,
+        choreography,
+      ),
       transition: index === 0 ? "Open on an establishing reveal." : "Use a quick music-synced transition from the previous beat.",
       cameraDirection:
         index === setup.storyTemplate.beats.length - 1
-          ? "End with a stable hero frame and readable birthday message."
-          : "Keep the camera movement gentle enough for stable face cutouts.",
+          ? `${choreography.cameraInstruction} End with a stable hero frame and readable birthday message.`
+          : choreography.cameraInstruction,
       audioCue:
         index === setup.storyTemplate.beats.length - 1
-          ? "Land on the chorus/drop for the final birthday title."
-          : "Use beat-matched movement that supports the selected music mood.",
+          ? `Land on ${setup.musicTrack.title}'s chorus/drop for the final birthday title.`
+          : `Use ${setup.musicTrack.title} beat-matched movement at ${setup.musicTrack.bpm} BPM.`,
+      beatTimingCue: choreography.beatWindow,
+      choreography,
     };
   });
 
@@ -96,10 +121,14 @@ function buildClipPrompt(
   setup: PartyFaceSetupPayload,
   visualDirection: string,
   caption: string,
+  choreography: ChoreographyCue,
 ) {
   return [
     visualDirection,
     setup.generationStyle.promptInstruction,
+    `Music track: ${setup.musicTrack.id}, ${setup.musicTrack.bpm} BPM. Choreography timing: ${choreography.beatWindow}.`,
+    `Choreography: ${choreography.block.name}. ${choreography.promptInstruction}`,
+    choreography.faceStabilityNote,
     caption ? `On-screen caption: ${personalizeCaption(caption, setup.birthdayDetails.recipientName)}.` : null,
     setup.birthdayDetails.message
       ? `Birthday message context: ${setup.birthdayDetails.message}.`

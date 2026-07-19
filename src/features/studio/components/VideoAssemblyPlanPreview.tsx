@@ -29,6 +29,9 @@ export function VideoAssemblyPlanPreview({ plan }: VideoAssemblyPlanPreviewProps
           <p className="mt-2 text-sm font-black text-[var(--pf-ink)]">
             {plan.audioMode}
           </p>
+          <p className="mt-1 text-xs font-bold leading-5 text-[var(--pf-muted)]">
+            {plan.musicTrackTitle}
+          </p>
         </div>
         <div className="rounded-lg bg-white p-4">
           <p className="text-xs font-black uppercase tracking-[0.08em] text-[var(--pf-muted)]">

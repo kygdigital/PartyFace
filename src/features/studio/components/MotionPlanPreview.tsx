@@ -36,12 +36,23 @@ export function MotionPlanPreview({ plan }: MotionPlanPreviewProps) {
           <p className="mt-2 text-sm font-black text-[var(--pf-ink)]">
             {plan.audioStrategy.label}
           </p>
+          {plan.audioStrategy.trackTitle ? (
+            <p className="mt-2 text-xs font-bold leading-5 text-[var(--pf-muted)]">
+              {plan.audioStrategy.trackTitle}
+            </p>
+          ) : null}
         </div>
         <div className="grid gap-2 text-sm font-medium leading-6 text-[var(--pf-muted)]">
           <p>{plan.audioStrategy.loopHint}</p>
           <p>
             {plan.audioStrategy.bpmRange}. {plan.audioStrategy.structure}
           </p>
+          {plan.audioStrategy.trackFile ? (
+            <p>
+              Registered file: {plan.audioStrategy.trackFile}. Beat map:{" "}
+              {plan.audioStrategy.beatMapSource}.
+            </p>
+          ) : null}
           <audio
             controls
             preload="metadata"
@@ -76,6 +87,17 @@ export function MotionPlanPreview({ plan }: MotionPlanPreviewProps) {
             <p className="mt-3 line-clamp-4 text-xs font-medium leading-5 text-[var(--pf-muted)]">
               {clip.visualPrompt}
             </p>
+            <div className="mt-3 rounded-md bg-[var(--pf-surface)] p-2">
+              <p className="text-[11px] font-black uppercase tracking-[0.08em] text-[var(--pf-muted)]">
+                Choreo
+              </p>
+              <p className="mt-1 text-xs font-black text-[var(--pf-ink)]">
+                {clip.choreography.block.name}
+              </p>
+              <p className="mt-1 text-xs font-semibold leading-5 text-[var(--pf-muted)]">
+                {clip.beatTimingCue} · {clip.choreography.castFormat}
+              </p>
+            </div>
           </article>
         ))}
       </div>

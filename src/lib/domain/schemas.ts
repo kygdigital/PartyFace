@@ -69,11 +69,32 @@ export const partyFaceSongScriptInputSchema = z.object({
   handoffPrompt: z.string().min(1),
 });
 
+export const partyFaceMusicTrackInputSchema = z.object({
+  id: z.string().min(1),
+  title: z.string().min(1),
+  file: z.string().min(1),
+  source: z.string().min(1),
+  theme: z.string().min(1),
+  vibeTags: z.array(z.string().min(1)).min(1),
+  bpm: z.number().positive(),
+  key: z.string().min(1),
+  durationSeconds: z.number().positive(),
+  vocal: z.string().min(1),
+  beatGrid: z.object({
+    bpm: z.number().positive(),
+    downbeatOffsetSeconds: z.number().nonnegative(),
+    beatsPerBar: z.number().int().positive(),
+  }),
+  beatMapSource: z.string().min(1),
+  previewUrl: z.string().min(1),
+});
+
 export const partyFaceSetupPayloadSchema = z.object({
   template: partyFaceTemplateInputSchema,
   generationStyle: partyFaceGenerationStyleInputSchema,
   storyTemplate: partyFaceStoryTemplateInputSchema,
   songScript: partyFaceSongScriptInputSchema.optional(),
+  musicTrack: partyFaceMusicTrackInputSchema,
   birthdayDetails: birthdayDetailsSchema,
   prompt: z.string().min(1),
   subjects: z.array(partyFaceSubjectInputSchema).min(1).max(2),
