@@ -30,6 +30,10 @@ track, and PartyFace renders a predictable, funny, shareable card.
 | `docs/epic-11-music-choreography-plan.md` | Epic 11 implementation plan for track selection, beat grids, and cutout-head choreography. | Product/engineering |
 | `docs/product-reconciliation.md` | Reconciles the original prompt/generation-first prototype with the fixed-template renderer direction. | Product/engineering |
 | `docs/product-requirements-v2.md` | Updated PRD for the fixed-template, music-backed, 30-45 second MP4 MVP. | Product |
+| `docs/review-and-mitigations-v2.md` | Review-board findings and lightweight mitigations for PRD v2. | Product/engineering |
+| `docs/product-requirements-v3.md` | Current PRD for the concept-validation prototype: render one Red Carpet Glam card, preview 3-4 more themes. | Product |
+| `docs/v3-epic-11-reconciliation.md` | Maps the Epic 11 build to PRD v3 and identifies follow-up gaps. | Product/engineering |
+| `docs/epic-12-red-carpet-renderer-prototype-plan.md` | Follow-up stories for the local ffmpeg Red Carpet Glam renderer prototype. | Product/engineering |
 
 ## Two Schemas, Two Layers
 
@@ -108,11 +112,14 @@ can expose per-beat overrides with:
 
 ## MVP Scope
 
-- 3-5 fixed template/theme options for testing.
-- One or two real face uploads.
+PRD v3 narrows the first complete renderer milestone:
+
+- One fully renderable Red Carpet Glam / Birthday Royale template.
+- 3-4 additional static theme previews for creative comparison.
+- One or two real face uploads processed locally.
 - Library track picker.
-- Fixed template renderer.
-- Downloadable 30-45 second MP4.
+- Fixed template renderer using server-side ffmpeg.
+- Downloadable ~35 second MP4.
 
 Deferred:
 

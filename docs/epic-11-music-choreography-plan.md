@@ -84,6 +84,22 @@ Each block should include:
 
 ## Epic 11 Stories
 
+### Implementation Status
+
+Committed in `efc7290 Add music library choreography planning`:
+
+- Story 11.1 is implemented with an app-level registered music library.
+- Story 11.2 is implemented with computed beat-grid previews.
+- Story 11.3 is implemented with reusable cutout-head choreography blocks.
+- Story 11.4 is implemented for motion/final-video prompt planning.
+- Story 11.5 is implemented as a studio demo checkpoint.
+
+PRD v3 keeps this work, but reframes it as planning/selection infrastructure for
+the lightweight renderer prototype. The next build epic should not expand
+multi-template video generation. It should create one deterministic Red Carpet
+Glam render path using local face cutouts, a pre-made dance clip, fixed anchors,
+BPM bob, and ffmpeg export.
+
 ### Story 11.1: Register Generated Song Library
 
 As a PartyFace creator,
