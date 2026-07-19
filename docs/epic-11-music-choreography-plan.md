@@ -7,6 +7,10 @@ core app, registered in a music library, and referenced by video generation.
 This lets us pair cutout-head dancing with predictable beat timing instead of
 trying to generate audio inline during every card creation flow.
 
+This plan builds on `docs/PartyFace-discovery.md`, which defines the split
+between upstream ComfyUI asset factories and the web app composition/rendering
+contract.
+
 ## Product Direction
 
 The creator chooses a birthday template, song script, and music track. PartyFace
@@ -21,6 +25,9 @@ created separately with ACE-Step 1.5 in Comfy Cloud, then registered in
 
 - The app references registered songs; it does not generate audio inline.
 - Songs are reusable across many birthday cards.
+- ComfyUI workflows create raw ingredients; PartyFace template/theme/music files
+  define the assembly recipe.
+- Rendering a card from registered assets should not require Comfy execution.
 - BPM, downbeat offset, and bar structure are known at ingest.
 - Beat timing is computed from `beat_grid` unless a track has tempo drift.
 - Explicit `beat_map` arrays are reserved for drift, tempo changes, or hand-edited timing.
