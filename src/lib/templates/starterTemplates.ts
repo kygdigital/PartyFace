@@ -11,6 +11,7 @@ export type StarterTemplate = {
   defaultPrompt: string;
   accentColor: string;
   support: OutputSupport;
+  renderStatus: "local-renderable" | "preview-only";
 };
 
 export const starterTemplates: StarterTemplate[] = [
@@ -23,6 +24,7 @@ export const starterTemplates: StarterTemplate[] = [
       "Premium disco-glam birthday scene with mirrorball sparkle, neon pink and gold lighting, joyful friends, polished editorial styling, and celebratory party atmosphere.",
     accentColor: "#FF3DA7",
     support: { still: true, motion: true },
+    renderStatus: "preview-only",
   },
   {
     id: "luxury-magazine-cover",
@@ -33,6 +35,7 @@ export const starterTemplates: StarterTemplate[] = [
       "High-end birthday magazine cover, glamorous portrait lighting, polished fashion styling, elegant headline space, premium celebration mood.",
     accentColor: "#FFC857",
     support: { still: true, motion: true },
+    renderStatus: "preview-only",
   },
   {
     id: "nineties-music-video",
@@ -43,6 +46,7 @@ export const starterTemplates: StarterTemplate[] = [
       "Playful 90s music video birthday scene, bright stage lights, fun choreography, saturated color, nostalgic pop-video energy, shareable celebration.",
     accentColor: "#2DD4FF",
     support: { still: true, motion: true },
+    renderStatus: "preview-only",
   },
   {
     id: "superhero-birthday-duo",
@@ -53,6 +57,7 @@ export const starterTemplates: StarterTemplate[] = [
       "Birthday superhero duo in a dynamic comic-book scene, dramatic poses, confetti burst, heroic lighting, celebratory city backdrop.",
     accentColor: "#7C3AED",
     support: { still: true, motion: true },
+    renderStatus: "preview-only",
   },
   {
     id: "red-carpet-paparazzi",
@@ -63,5 +68,6 @@ export const starterTemplates: StarterTemplate[] = [
       "Red carpet birthday celebration with paparazzi flashes, velvet ropes, glamorous outfits, iconic celebrity arrival energy, polished party poster look.",
     accentColor: "#E11D48",
     support: { still: true, motion: true },
+    renderStatus: "local-renderable",
   },
 ];

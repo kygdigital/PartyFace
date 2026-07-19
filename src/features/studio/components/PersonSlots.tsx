@@ -59,6 +59,11 @@ export function PersonSlots({ slots, onUploadPhoto, onRemovePhoto }: PersonSlots
                   <p className="mt-1 truncate text-xs font-semibold text-[var(--pf-muted)]">
                     {slot.photo?.fileName ?? "Upload one face photo for this person."}
                   </p>
+                  <p className="mt-1 text-xs font-semibold leading-5 text-[var(--pf-muted)]">
+                    {slot.photo
+                      ? "Local circular cutout preview. This renderer keeps the face file on this machine."
+                      : "Best results: one front-facing face, clear light, no heavy crop."}
+                  </p>
 
                   {slot.photo ? (
                     <p

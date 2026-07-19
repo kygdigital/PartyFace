@@ -36,6 +36,7 @@ import { BenchmarkComparison } from "./components/BenchmarkComparison";
 import { GenerationStyleSelector } from "./components/GenerationStyleSelector";
 import { MusicTrackPicker } from "./components/MusicTrackPicker";
 import { SongScriptComposer } from "./components/SongScriptComposer";
+import { LocalRendererPanel } from "./components/LocalRendererPanel";
 import { StoryTemplatePlanner } from "./components/StoryTemplatePlanner";
 import { StarterTemplatePicker } from "./components/StarterTemplatePicker";
 import { PersonSlots } from "./components/PersonSlots";
@@ -121,6 +122,11 @@ export function CreationStudio() {
     useState<string | null>(null);
   const [finalVideoJobRecord, setFinalVideoJobRecord] =
     useState<GenerationJobRecord | null>(null);
+  const [localRenderJobRecord, setLocalRenderJobRecord] =
+    useState<GenerationJobRecord | null>(null);
+  const [localRenderGenerationError, setLocalRenderGenerationError] =
+    useState<string | null>(null);
+  const [isLocalRenderActive, setIsLocalRenderActive] = useState(false);
   const selectedTemplate = useMemo(
     () => starterTemplates.find((template) => template.id === selectedTemplateId) ?? starterTemplates[0],
     [selectedTemplateId],
@@ -247,6 +253,12 @@ export function CreationStudio() {
     return [];
   }, [finalVideoJobRecord, setupPayload.birthdayDetails.recipientName]);
   const selectedFinalVideoVariant = finalVideoOutputs[0] ?? null;
+  const localRenderOutputs =
+    localRenderJobRecord?.outputType === "final-video" &&
+    hasMotionOutputs(localRenderJobRecord.outputs)
+      ? localRenderJobRecord.outputs
+      : [];
+  const selectedLocalRenderVariant = localRenderOutputs[0] ?? null;
   const stillFavorite =
     stillVariants.find((variant) =>
       favoriteStillVariantIds.includes(variant.variantId),
@@ -637,6 +649,38 @@ export function CreationStudio() {
     }
   }
 
+  async function handleLocalRender(renderMode: "draft" | "full") {
+    if (!isReadyToGenerate || isLocalRenderActive) return;
+
+    setIsLocalRenderActive(true);
+    setLocalRenderGenerationError(null);
+
+    try {
+      const response = await fetch("/api/render/red-carpet", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ...setupPayload,
+          renderMode,
+        }),
+      });
+      const result = (await response.json()) as ApiResponse<GenerationJobRecord>;
+
+      if (result.ok) {
+        setLocalRenderJobRecord(result.data);
+        return;
+      }
+
+      setLocalRenderGenerationError(result.error.message);
+    } catch {
+      setLocalRenderGenerationError("Local Red Carpet render could not start.");
+    } finally {
+      setIsLocalRenderActive(false);
+    }
+  }
+
   function handleToggleStillFavorite(variantId: string) {
     setFavoriteStillVariantIds((currentIds) =>
       currentIds.includes(variantId)
@@ -879,6 +923,20 @@ export function CreationStudio() {
           <MotionPlanPreview plan={motionGenerationPlan} />
 
           <VideoAssemblyPlanPreview plan={videoAssemblyPlan} />
+
+          <LocalRendererPanel
+            selectedTemplate={selectedTemplate}
+            faceCount={setupPayload.subjects.length}
+            trackTitle={setupPayload.musicTrack.title}
+            job={localRenderJobRecord}
+            outputs={localRenderOutputs}
+            isReady={isReadyToGenerate}
+            isActive={isLocalRenderActive}
+            error={localRenderGenerationError}
+            onGenerateDraft={() => handleLocalRender("draft")}
+            onGenerateFull={() => handleLocalRender("full")}
+            onExport={() => exportMotionVariant(selectedLocalRenderVariant)}
+          />
 
           <FinalVideoProgress
             job={finalVideoJobRecord}

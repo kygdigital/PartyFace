@@ -24,6 +24,7 @@
 .DS_Store
 *.pem
 /work/
+/.partyface-renders/
 
 # generated media sources
 /public/audio/*.wav

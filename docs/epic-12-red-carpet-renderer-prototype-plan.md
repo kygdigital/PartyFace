@@ -37,6 +37,22 @@ Out of scope:
 
 ## Stories
 
+### Implementation Status
+
+Committed implementation target:
+
+- Story 12.1: Red Carpet Paparazzi is marked as local-renderable; other starter templates are preview-only for the v3 renderer.
+- Story 12.2: Uploads show local circular cutout previews and the local renderer decodes face files into `.partyface-renders/`.
+- Story 12.3: The local renderer uses fixed solo/duo anchors and BPM-synced vertical bob.
+- Story 12.4: The local renderer can produce a 5-second low-res draft preview.
+- Story 12.5: `scripts/make-card.sh` creates a deterministic ffmpeg MP4.
+- Story 12.6: Registered tracks resolve under `public/library/`.
+- Story 12.7: Upload and renderer panels state that faces remain local for the prototype.
+
+Known prototype limitation: the v1 cutout is a circular sticker mask, not full
+semantic background removal. This is enough to validate the JibJab-style
+cutout-head feeling before investing in segmentation.
+
 ### Story 12.1: Red Carpet Renderable Template Plus Static Previews
 
 As a PartyFace creator,

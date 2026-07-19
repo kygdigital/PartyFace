@@ -16,7 +16,7 @@ export type GenerationJobRecord = {
   outputType: GenerationOutputType;
   status: GenerationJobStatus;
   workflowId: string;
-  mode: "mock" | "comfy";
+  mode: "mock" | "comfy" | "local";
   variantCount: number;
   providerJobIds?: string[];
   clipStatuses?: GenerationClipStatus[];

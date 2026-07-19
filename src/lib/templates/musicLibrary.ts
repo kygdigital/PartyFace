@@ -53,7 +53,7 @@ export const musicLibraryTracks: MusicLibraryTrack[] = [
     },
     beatMap: null,
     beatMapSource: "computed_on_ingest",
-    previewUrl: "/audio/partyface-90s-stock-loop.mp3",
+    previewUrl: "/library/glam-disco-116bpm-01.mp3",
   },
   {
     id: "electro-dancepop-124bpm-01",
@@ -73,7 +73,7 @@ export const musicLibraryTracks: MusicLibraryTrack[] = [
     },
     beatMap: null,
     beatMapSource: "computed_on_ingest",
-    previewUrl: "/audio/partyface-90s-stock-loop.mp3",
+    previewUrl: "/library/electro-dancepop-124bpm-01.mp3",
   },
 ];
 

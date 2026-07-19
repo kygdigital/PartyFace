@@ -61,6 +61,13 @@ export function StarterTemplatePicker({
                   <span className="mt-2 flex gap-2">
                     {template.support.still ? <SupportBadge label="Still" /> : null}
                     {template.support.motion ? <SupportBadge label="Motion" /> : null}
+                    <SupportBadge
+                      label={
+                        template.renderStatus === "local-renderable"
+                          ? "Local render"
+                          : "Preview only"
+                      }
+                    />
                   </span>
                 </span>
               </div>
