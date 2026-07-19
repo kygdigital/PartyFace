@@ -23,7 +23,7 @@ funny, shareable card.
 | File | What it is | Layer |
 | ---- | ---------- | ----- |
 | `PartyFace-one-pager-v1.md` | Project brief / the ask | Product |
-| `template.schema.json` | Fixed 8-beat structure plus choreography preset enum. App composition contract, not a ComfyUI workflow. | Compose/render |
+| `docs/template.schema.json` | Fixed beat structure plus choreography preset enum. App composition contract, not a ComfyUI workflow. | Compose/render |
 | `theme-pack.json` | Swappable skin: backdrop, figures, gag copy, music ref. Example: Red Carpet Glam. | Compose/render |
 | `music-library.json` | Index of reusable songs. Tracks are referenced, never generated inline. `beat_grid` is computed on ingest from known BPM. | Assets -> compose |
 | `docs/music-library-index.json` | Current PartyFace seed index for reusable generated songs. | Assets -> compose |
@@ -38,7 +38,7 @@ ComfyUI workflows  ->  media files
                        songs via ACE-Step
                        figures + face cutouts via image models
                               |
-template.schema.json + theme-pack.json + music-library.json
+docs/template.schema.json + theme-pack.json + music-library.json
                               |
                     Web app renderer
                     ffmpeg / canvas / WebCodecs
@@ -66,7 +66,7 @@ The first PartyFace template should use a fixed beat skeleton:
 8. Group climax.
 9. Happy Birthday outro.
 
-The file name `template.schema.json` may still describe this as an "8-beat"
+The file name `docs/template.schema.json` may still describe this as an "8-beat"
 structure if intro/outro framing is modeled separately. The implementation
 should be explicit about whether the outro is a beat or an assembly tail.
 

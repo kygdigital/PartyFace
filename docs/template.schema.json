@@ -1,0 +1,212 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://partyface.app/schemas/template.schema.json",
+  "title": "PartyFace Card Template",
+  "description": "App-side composition contract for a personalized dancing e-card. This is NOT a ComfyUI workflow; Comfy generates the raw media (songs, figures, cutouts) upstream, while this schema describes how the web app renderer assembles a finished card from those ingredients. The template is fixed per card style so every recipient gets a consistent experience; only faces (always) and, optionally, choreo presets vary per card.",
+  "type": "object",
+  "required": ["id", "version", "duration_s", "fps", "cast_size", "beats"],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Stable template id, e.g. 'birthday-royale-v1'."
+    },
+    "version": {
+      "type": "string",
+      "description": "Semver of this template."
+    },
+    "name": {
+      "type": "string"
+    },
+    "duration_s": {
+      "type": "number",
+      "description": "Total card length in seconds.",
+      "examples": [72]
+    },
+    "fps": {
+      "type": "integer",
+      "examples": [24]
+    },
+    "cast_size": {
+      "type": "integer",
+      "description": "Number of face cutouts the template expects.",
+      "minimum": 1,
+      "maximum": 4
+    },
+    "orientation": {
+      "type": "string",
+      "enum": ["landscape", "portrait", "square"],
+      "default": "landscape"
+    },
+    "customization": {
+      "type": "object",
+      "description": "Controls what the end user may change. Lock everything for a fully curated experience, or expose choreo presets.",
+      "additionalProperties": false,
+      "properties": {
+        "allow_choreo_override": {
+          "type": "boolean",
+          "default": false,
+          "description": "If true, the user may pick a choreo preset per beat from choreo_presets; if false, beats use their default choreo."
+        },
+        "editable_beats": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Beat ids whose choreo the user may change. Only used when allow_choreo_override is true."
+        }
+      }
+    },
+    "beats": {
+      "type": "array",
+      "description": "The fixed structural skeleton. Beats play in order; timing snaps to the track's beat grid at render time.",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "start_bar", "overlay"],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "start_bar": {
+            "type": "integer",
+            "description": "Musical bar this beat starts on. Resolved to a timestamp via the track's bpm and beats_per_bar at render time so it lands on-beat for any tempo."
+          },
+          "choreo": {
+            "description": "Default choreography preset for this beat. Null means no character motion, such as a full-screen graphic.",
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/$defs/choreo_preset"
+              }
+            ]
+          },
+          "overlay": {
+            "$ref": "#/$defs/overlay_type"
+          },
+          "notes": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "choreo_preset": {
+      "type": "string",
+      "description": "Reusable choreography vocabulary. Each value maps to a canned, loopable, beat-synced body animation that the face cutout rides on top of. This enum is the only set of moves the app supports; add here to extend.",
+      "enum": [
+        "arms_up",
+        "point_at_camera",
+        "fist_pump",
+        "hip_sway",
+        "air_guitar",
+        "cape_spin",
+        "freeze_pose",
+        "group_point",
+        "clap"
+      ]
+    },
+    "overlay_type": {
+      "type": "string",
+      "description": "Graphic layer composited over the scene for this beat. Copy/art for each overlay comes from the theme pack.",
+      "enum": [
+        "title_card",
+        "logo_starburst",
+        "broadcast_lower_third",
+        "backdrop",
+        "caption_card",
+        "number_gag",
+        "cameo",
+        "confetti",
+        "outro_card"
+      ]
+    }
+  },
+  "examples": [
+    {
+      "id": "birthday-royale-v1",
+      "version": "1.0.0",
+      "name": "Birthday Royale",
+      "duration_s": 72,
+      "fps": 24,
+      "cast_size": 2,
+      "orientation": "landscape",
+      "customization": {
+        "allow_choreo_override": false,
+        "editable_beats": ["dance_verse", "group_climax"]
+      },
+      "beats": [
+        {
+          "id": "hero_reveal",
+          "label": "Hero reveal",
+          "start_bar": 1,
+          "choreo": "arms_up",
+          "overlay": "title_card"
+        },
+        {
+          "id": "logo_splash",
+          "label": "Logo splash",
+          "start_bar": 3,
+          "choreo": null,
+          "overlay": "logo_starburst"
+        },
+        {
+          "id": "live_framing",
+          "label": "Live-event framing",
+          "start_bar": 4,
+          "choreo": "point_at_camera",
+          "overlay": "broadcast_lower_third"
+        },
+        {
+          "id": "dance_verse",
+          "label": "Dance-loop verse",
+          "start_bar": 6,
+          "choreo": "hip_sway",
+          "overlay": "backdrop"
+        },
+        {
+          "id": "gag_interstitial",
+          "label": "Gag interstitial",
+          "start_bar": 12,
+          "choreo": "freeze_pose",
+          "overlay": "caption_card"
+        },
+        {
+          "id": "number_gag",
+          "label": "Age/number gag",
+          "start_bar": 14,
+          "choreo": "freeze_pose",
+          "overlay": "number_gag"
+        },
+        {
+          "id": "escalation",
+          "label": "Escalation / hero",
+          "start_bar": 18,
+          "choreo": "cape_spin",
+          "overlay": "cameo"
+        },
+        {
+          "id": "group_climax",
+          "label": "Group climax",
+          "start_bar": 22,
+          "choreo": "group_point",
+          "overlay": "confetti"
+        },
+        {
+          "id": "outro",
+          "label": "Happy Birthday",
+          "start_bar": 30,
+          "choreo": "fist_pump",
+          "overlay": "outro_card"
+        }
+      ]
+    }
+  ]
+}
