@@ -1,0 +1,43 @@
+{
+  "$schema_note": "Index of reusable songs. The app REFERENCES tracks; it never generates audio inline. Songs are produced separately (ACE-Step 1.5 in Comfy Cloud) and registered here. beat_grid is computed at ingest, seeded by the known bpm set at generation time: timestamp(bar,beat) = downbeat_offset_s + ((bar-1)*beats_per_bar + beat)*(60/bpm). Store an explicit beat_map array only for tracks with tempo drift.",
+  "tracks": [
+    {
+      "id": "glam-disco-116bpm-01",
+      "title": "Birthday Royale (Glam Disco)",
+      "file": "library/glam-disco-116bpm-01.mp3",
+      "source": "ace-step-1.5-xl-turbo",
+      "theme": "red_carpet_glam",
+      "vibe_tags": ["disco", "glam", "celebratory", "danceable"],
+      "bpm": 116,
+      "key": "F major",
+      "duration_s": 120,
+      "vocal": "female_lead",
+      "beat_grid": {
+        "bpm": 116,
+        "downbeat_offset_s": 0.0,
+        "beats_per_bar": 4
+      },
+      "beat_map": null,
+      "beat_map_source": "computed_on_ingest"
+    },
+    {
+      "id": "electro-dancepop-124bpm-01",
+      "title": "Birthday Royale (Electro Dance-Pop)",
+      "file": "library/electro-dancepop-124bpm-01.mp3",
+      "source": "ace-step-1.5-xl-turbo",
+      "theme": "red_carpet_glam",
+      "vibe_tags": ["dance-pop", "electro", "club", "euphoric"],
+      "bpm": 124,
+      "key": "C major",
+      "duration_s": 120,
+      "vocal": "female_lead",
+      "beat_grid": {
+        "bpm": 124,
+        "downbeat_offset_s": 0.0,
+        "beats_per_bar": 4
+      },
+      "beat_map": null,
+      "beat_map_source": "computed_on_ingest"
+    }
+  ]
+}
