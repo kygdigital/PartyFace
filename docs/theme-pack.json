@@ -1,0 +1,49 @@
+{
+  "$schema_note": "A theme pack is the swappable skin that fills a fixed template's slots. Same template plus different theme pack means same experience, different vibe. Art/audio assets are produced upstream by image models, nano-banana-pro cutouts for figures, and ACE-Step for songs, then referenced here by path/id.",
+  "id": "red-carpet-glam-v1",
+  "name": "Red Carpet Glam",
+  "template_id": "birthday-royale-v1",
+  "music_ref": "glam-disco-116bpm-01",
+  "palette": ["#E8B923", "#B0004E", "#1B1035", "#F5F0E6"],
+  "title_text": "BIRTHDAY ROYALE!",
+  "logo_text": "OOOH YEAH - RED CARPET STYLE",
+  "figures": [
+    {
+      "role": "lead",
+      "asset": "assets/figures/glam-lead.png"
+    },
+    {
+      "role": "sidekick",
+      "asset": "assets/figures/glam-sidekick.png"
+    }
+  ],
+  "backdrop": "assets/backdrops/red-carpet-arena.png",
+  "overlays": {
+    "broadcast_lower_third": "LIVE - BIRTHDAY ROYALE! · Coliseum Arena",
+    "gag_copy": ["BEST DRESSED???", "ICON STATUS: CONFIRMED"],
+    "number_gag_source": "recipient.age",
+    "cameo": "assets/scenes/paparazzi-swarm.png"
+  },
+  "outro_text": "HAPPY BIRTHDAY, {recipient_name}!",
+  "runtime_inputs": {
+    "_note": "Filled per-card by the web app. Faces are always required; recipient_name/age drive text and the number gag.",
+    "faces": [
+      {
+        "role": "lead",
+        "required": true
+      },
+      {
+        "role": "sidekick",
+        "required": true
+      }
+    ],
+    "recipient_name": {
+      "type": "string",
+      "required": true
+    },
+    "recipient_age": {
+      "type": "integer",
+      "required": false
+    }
+  }
+}

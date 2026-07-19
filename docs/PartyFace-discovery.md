@@ -24,7 +24,7 @@ funny, shareable card.
 | ---- | ---------- | ----- |
 | `PartyFace-one-pager-v1.md` | Project brief / the ask | Product |
 | `docs/template.schema.json` | Fixed beat structure plus choreography preset enum. App composition contract, not a ComfyUI workflow. | Compose/render |
-| `theme-pack.json` | Swappable skin: backdrop, figures, gag copy, music ref. Example: Red Carpet Glam. | Compose/render |
+| `docs/theme-pack.json` | Swappable skin: backdrop, figures, gag copy, music ref. Example: Red Carpet Glam. | Compose/render |
 | `music-library.json` | Index of reusable songs. Tracks are referenced, never generated inline. `beat_grid` is computed on ingest from known BPM. | Assets -> compose |
 | `docs/music-library-index.json` | Current PartyFace seed index for reusable generated songs. | Assets -> compose |
 | `docs/epic-11-music-choreography-plan.md` | Epic 11 implementation plan for track selection, beat grids, and cutout-head choreography. | Product/engineering |
@@ -38,7 +38,7 @@ ComfyUI workflows  ->  media files
                        songs via ACE-Step
                        figures + face cutouts via image models
                               |
-docs/template.schema.json + theme-pack.json + music-library.json
+docs/template.schema.json + docs/theme-pack.json + music-library.json
                               |
                     Web app renderer
                     ffmpeg / canvas / WebCodecs
