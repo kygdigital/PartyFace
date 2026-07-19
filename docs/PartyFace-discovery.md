@@ -28,6 +28,7 @@ funny, shareable card.
 | `music-library.json` | Index of reusable songs. Tracks are referenced, never generated inline. `beat_grid` is computed on ingest from known BPM. | Assets -> compose |
 | `docs/music-library-index.json` | Current PartyFace seed index for reusable generated songs. | Assets -> compose |
 | `docs/epic-11-music-choreography-plan.md` | Epic 11 implementation plan for track selection, beat grids, and cutout-head choreography. | Product/engineering |
+| `docs/product-reconciliation.md` | Reconciles the original prompt/generation-first prototype with the fixed-template renderer direction. | Product/engineering |
 
 ## Two Schemas, Two Layers
 
