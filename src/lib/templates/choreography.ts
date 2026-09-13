@@ -99,6 +99,54 @@ export const choreographyBlocks: ChoreographyBlock[] = [
     faceStabilityNote:
       "Freeze the face cutouts cleanly for the final shareable frame.",
   },
+  {
+    id: "travolta-point",
+    name: "Travolta Point",
+    beats: 8,
+    bestForTemplates: ["disco-birthday-entrance", "red-carpet-awards"],
+    promptInstruction:
+      "Punch one arm up on the diagonal disco point, alternating arms on every other beat while the cutout head bobs on the beat.",
+    cameraInstruction:
+      "Hold a medium-wide disco-floor shot so the big diagonal arm line reads in silhouette.",
+    faceStabilityNote:
+      "Keep the face cutout flat and upright; the pointing arm must never cross the face.",
+  },
+  {
+    id: "hip-bump-groove",
+    name: "Hip Bump Groove",
+    beats: 8,
+    bestForTemplates: ["disco-birthday-entrance"],
+    promptInstruction:
+      "Bump hips right-right then left-left on the first four beats, then double-time bumps with a clap on the phrase peak.",
+    cameraInstruction:
+      "Use a centered front-facing party shot with a slight rhythmic zoom pulse on the downbeats.",
+    faceStabilityNote:
+      "Anchor the face cutout above the torso so hip motion never tilts the head.",
+  },
+  {
+    id: "shimmy-roll",
+    name: "Shimmy Roll",
+    beats: 8,
+    bestForTemplates: ["disco-birthday-entrance", "birthday-heist"],
+    promptInstruction:
+      "Shimmy shoulders while rolling the body down for four beats and back up for four, cutout head shaking gently in time.",
+    cameraInstruction:
+      "Hold a medium party shot; let the vertical roll read without cropping the head.",
+    faceStabilityNote:
+      "Preserve face identity; shimmy the shoulders only, keep the cutout rigid.",
+  },
+  {
+    id: "spin-finish",
+    name: "Spin Finish",
+    beats: 4,
+    bestForTemplates: ["disco-birthday-entrance", "red-carpet-awards"],
+    promptInstruction:
+      "Spin in place on the first two beats, snap into a freeze pose on beat three, and hold arms up in a V for the final hit.",
+    cameraInstruction:
+      "Push to a stable full-card composition for the freeze so it works as a thumbnail.",
+    faceStabilityNote:
+      "Keep the face cutout forward-facing through the spin; do not blur or rotate the face.",
+  },
 ];
 
 export function buildChoreographyCue({
@@ -116,7 +164,7 @@ export function buildChoreographyCue({
   track: MusicLibraryTrack;
   castCount: number;
 }): ChoreographyCue {
-  const block = selectChoreographyBlock(templateId, beat.id, sequence, totalBeats);
+  const block = selectChoreographyBlock(templateId, beat.id, sequence, totalBeats, track);
   const timeWindow = parseTimeRange(beat.timeRange);
   const startMarker = findNearestBeatMarker(track, timeWindow?.startSeconds ?? 0);
   const endMarker = findNearestBeatMarker(track, timeWindow?.endSeconds ?? 0);
@@ -141,7 +189,15 @@ function selectChoreographyBlock(
   beatId: string,
   sequence: number,
   totalBeats: number,
+  track?: MusicLibraryTrack,
 ) {
+  // Disco tracks (and the disco entrance template) get the dedicated
+  // disco routine so the travolta-point / hip-bump / shimmy / spin blocks
+  // are actually chosen instead of the generic party fallbacks.
+  if (isDiscoContext(templateId, track)) {
+    return selectDiscoBlock(beatId, sequence, totalBeats);
+  }
+
   if (sequence === totalBeats) return findBlock("confetti-drop");
 
   const normalizedBeatId = beatId.toLowerCase();
@@ -169,6 +225,35 @@ function selectChoreographyBlock(
   if (templateId === "red-carpet-awards") return findBlock("group-point");
 
   return findBlock("head-sway");
+}
+
+function isDiscoContext(templateId: string, track?: MusicLibraryTrack) {
+  if (templateId === "disco-birthday-entrance") return true;
+  return track?.vibeTags?.some((tag) => tag.toLowerCase() === "disco") ?? false;
+}
+
+function selectDiscoBlock(beatId: string, sequence: number, totalBeats: number) {
+  // Finish on a freeze pose so the final frame works as a thumbnail.
+  if (sequence === totalBeats) return findBlock("spin-finish");
+
+  const normalizedBeatId = beatId.toLowerCase();
+
+  if (normalizedBeatId.includes("entrance") || normalizedBeatId.includes("intro")) {
+    return findBlock("travolta-point");
+  }
+
+  if (normalizedBeatId.includes("arrival") || normalizedBeatId.includes("walk")) {
+    return findBlock("hip-bump-groove");
+  }
+
+  if (normalizedBeatId.includes("dance") || normalizedBeatId.includes("groove")) {
+    return findBlock("shimmy-roll");
+  }
+
+  // Sequence-based fallback so any disco track cycles through the routine
+  // even when its beat ids don't match the keywords above.
+  const rotation = ["travolta-point", "hip-bump-groove", "shimmy-roll"];
+  return findBlock(rotation[(sequence - 1) % rotation.length]);
 }
 
 function findBlock(blockId: string) {
